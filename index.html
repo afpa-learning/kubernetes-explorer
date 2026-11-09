@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Schéma d’architecture Kubernetes</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Légende -->
+  <aside id="legend">
+    <h1>Architecture d’un cluster Kubernetes</h1>
+    <div><span class="swatch hex control-plane"></span>Composant du Control Plane</div>
+    <div><span class="swatch hex"></span>Composant ou interface de nœud</div>
+    <div><span class="swatch hex network"></span>Réseau (Services, Ingress)</div>
+    <div>
+      <span class="swatch hex pod"></span>Pod
+      <span class="swatch container"></span>Conteneur
+      <span class="swatch volume"></span>Volume
+    </div>
+    <small>Clic sur un élément : descriptif. Double-clic sur un nœud : zoom. Molette : zoom. Glisser : déplacer.</small>
+  </aside>
+
+  <!-- Boutons de zoom -->
+  <div id="zoom-buttons">
+    <button id="zoom-in" title="Zoom avant">+</button>
+    <button id="zoom-out" title="Zoom arrière">−</button>
+  </div>
+
+  <!-- Panneau de descriptif (affiché au clic sur un élément) -->
+  <section id="info" hidden>
+    <h2 id="info-title"></h2>
+    <p id="info-text"></p>
+    <a id="info-link" target="_blank" rel="noopener">Ouvrir la documentation ↗</a>
+    <button id="info-close" aria-label="Fermer">✕</button>
+  </section>
+
+  <!-- Le schéma est dessiné ici par js/diagram.js -->
+  <svg id="diagram"></svg>
+
+  <!-- Ordre de chargement : données → outils de dessin → schéma → interactions -->
+  <script src="js/data.js"></script>
+  <script src="js/svg-helpers.js"></script>
+  <script src="js/diagram.js"></script>
+  <script src="js/view.js"></script>
+  <script src="js/info-panel.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

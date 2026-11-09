@@ -1,0 +1,83 @@
+/* ===== 1. Couleurs (modifiables ici) ===== */
+:root {
+  color-scheme: light;
+  --blue: #326ce5;  --blue-dark: #1d4fbf;  --blue-light: #dbe8ff;
+  --blue-pale: #eaf2ff;  --blue-soft: #cfe0ff;  --blue-bg: #f0f6ff;
+  --teal: #00838f;  --teal-dark: #006d78;  --teal-text: #00606a;  --teal-light: #d6f1f3;
+  --navy: #0b2a6b;  --navy-light: #1a4ab0;
+  --highlight: #f59e0b;  --text: #1d3f95;  --muted: #5a6f9f;
+}
+
+/* ===== 2. Page ===== */
+html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; color: var(--text);
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+/* ===== 3. Schéma ===== */
+#diagram { display: block; width: 100vw; height: 100vh; touch-action: none; cursor: grab; user-select: none; }
+text { fill: var(--blue-dark); pointer-events: none; }
+.link { stroke: #7aa2f0; stroke-width: 3; stroke-dasharray: 8 6; fill: none; }
+
+/* Élément cliquable : --fill = couleur actuelle, --fill-hover = couleur au survol */
+.el { --fill: #fff; --fill-hover: var(--blue-light); --stroke: var(--blue); cursor: pointer; }
+.el:hover { --fill: var(--fill-hover); }
+.el :is(polygon, rect, path, ellipse) {
+  fill: var(--fill); stroke: var(--stroke); stroke-width: 2.5px; stroke-linejoin: round; transition: fill .25s;
+}
+.el.selected { --stroke: var(--highlight); }
+.el.selected :is(polygon, rect, path, ellipse) { stroke-width: 5px; }
+
+/* Un style par type d'élément (le type est choisi dans js/diagram.js) */
+.type-control-plane { --fill: var(--blue); --fill-hover: var(--blue-dark); --stroke: var(--blue-dark); }
+.type-node-part { }  /* kubelet, runtime… : style par défaut (fond blanc) */
+.type-network { --fill: var(--teal); --fill-hover: var(--teal-dark); --stroke: var(--teal-dark); }
+.type-network-interface { --fill-hover: var(--teal-light); --stroke: var(--teal); }
+.type-pod { --fill: var(--blue-pale); --fill-hover: #d3e3ff; }
+.type-container { --fill: var(--blue); --fill-hover: var(--blue-dark); }
+.type-volume { --fill: var(--blue-soft); --fill-hover: #b4cdfb; }
+.type-external { --fill: var(--navy); --fill-hover: var(--navy-light); --stroke: var(--navy); }
+.type-node { --fill: var(--blue-bg); --fill-hover: #e2edff; }
+.type-cluster { --fill: #fafcff; --fill-hover: #f1f7ff; --stroke: #7aa2f0; }
+
+/* Épaisseurs particulières */
+.type-node polygon { stroke-width: 3.5px; }
+.type-pod polygon { stroke-width: 3px; }
+.type-container rect, .type-volume :is(path, ellipse) { stroke-width: 2px; }
+.type-cluster polygon { stroke-width: 3px; stroke-dasharray: 14 8; }
+
+/* Couleur du texte selon le fond */
+.type-control-plane text, .type-container text, .type-network text, .type-external text { fill: #fff; }
+.type-network-interface text { fill: var(--teal-text); }
+
+/* ===== 4. Légende ===== */
+#legend { position: fixed; left: 16px; top: calc(12px + env(safe-area-inset-top, 0px)); max-width: 300px;
+  padding: 10px 14px; font-size: 13px; line-height: 1.7; background: rgba(255,255,255,.92);
+  border: 1px solid var(--blue-soft); border-radius: 12px; }
+#legend h1 { margin: 0 0 4px; font-size: 17px; }
+#legend small { display: block; margin-top: 6px; color: var(--muted); line-height: 1.4; }
+.swatch { display: inline-block; width: 15px; height: 13px; margin-right: 7px; vertical-align: -2px;
+  box-sizing: border-box; border: 2px solid var(--blue); background: #fff; }
+.swatch.hex { clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+.swatch.control-plane { background: var(--blue); border-color: var(--blue-dark); }
+.swatch.network { background: var(--teal); border-color: var(--teal-dark); }
+.swatch.pod { background: var(--blue-pale); }
+.swatch.container { background: var(--blue); border-radius: 4px; }
+.swatch.volume { background: var(--blue-soft); border-radius: 6px; }
+
+/* ===== 5. Boutons de zoom ===== */
+#zoom-buttons { position: fixed; right: 16px; top: calc(12px + env(safe-area-inset-top, 0px)); display: flex; gap: 6px; }
+#zoom-buttons button { width: 38px; height: 38px; border: 2px solid var(--blue); border-radius: 10px;
+  background: #fff; color: var(--blue); font-size: 20px; cursor: pointer; }
+#zoom-buttons button:hover { background: var(--blue-pale); }
+
+/* ===== 6. Panneau de descriptif ===== */
+#info { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+  width: min(560px, calc(100vw - 32px)); box-sizing: border-box; padding: 12px 44px 12px 16px;
+  background: #fff; border: 2px solid var(--blue); border-radius: 14px; box-shadow: 0 6px 24px rgba(30,60,140,.18);
+  font-size: 14px; line-height: 1.45; }
+#info[hidden] { display: none; }
+#info h2 { margin: 0; font-size: 16px; }
+#info p { margin: 4px 0 8px; color: #33456f; }
+#info a { color: var(--blue); font-weight: 600; text-decoration: none; }
+#info a:hover { text-decoration: underline; }
+#info-close { position: absolute; right: 10px; top: 8px; border: 0; background: none;
+  font-size: 18px; color: var(--muted); cursor: pointer; }
